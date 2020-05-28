@@ -20,13 +20,10 @@ grad = zeros(size(theta));
 % Note: grad should have the same dimensions as theta
 %
 
+J = (-1/m)*( ( y'*(log(sigmoid(X*theta))) ) + ( (ones(m,1) - y)'*(log(ones(m,1) - ((sigmoid(X*theta))))) ) );
 
+grad = (1/m)*(X'*( (sigmoid(X*theta)) - y ));
 
-
-
-
-
-
-% =============================================================
+% ============================================================
 
 end
