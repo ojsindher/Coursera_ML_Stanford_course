@@ -12,13 +12,20 @@ figure; hold on;
 %               examples and 'ko' for the negative examples.
 %
 
+data = [X,y];
 
-
-
-
-
-
-
+ind0 = [];
+ind1 = [];
+for i = 1:length(y),
+   if y(i) == 1;
+      ind0 = [ind0,i];
+   elseif (y(i) == 0);
+      ind1 = [ind1,i];
+   end;
+end;
+plot(X(ind0,1),X(ind0,2), 'color','g','k+')
+plot(X(ind1,1),X(ind1,2), 'color','b','ko')
+legend('Admitted','Not admitted')
 
 % =========================================================================
 
