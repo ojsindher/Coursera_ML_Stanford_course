@@ -28,7 +28,9 @@ m = size(X, 1);
 % You need to return the following variables correctly 
 J = 0;
 Theta1_grad = zeros(size(Theta1));
+D1 = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
+D2 = zeros(size(Theta2));
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -62,30 +64,46 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+X = [ones(m,1) X];
+Y = zeros(m,num_labels);
+for i=1:m
+  Y(i,y(i)) = 1;
+end
 
+for i=1:m
+  a1 = X(i,:)';
+  z2 = Theta1*a1;
+  a2 = sigmoid(z2);
+  a2 = [1;a2];
+  z3 = Theta2*a2;
+  a3 = sigmoid(z3);
 
+  d3 = a3 - Y(i,:)';
+  d2 = Theta2'*d3.*sigmoidGradient([0;z2]);
 
+  Theta1_grad = Theta1_grad + (d2(2:end)*a1');
+  Theta2_grad = Theta2_grad + (d3*a2');
 
+  J = J + ((-1/m)*( ( Y(i,:)*(log(a3)) ) + ( (ones(1,num_labels) - Y(i,:))*(log(ones(num_labels,1) - ((a3)))) ) ));  
+% this is calculating the error for each example in a loop
 
+end
 
+D11 = (1/m)*Theta1_grad(:,1);
+D12 = (1/m)*(Theta1_grad(:,2:end) + (lambda*Theta1(:,2:end)));
+D21 = (1/m)*Theta2_grad(:,1);
+D22 = (1/m)*(Theta2_grad(:,2:end) + (lambda*Theta2(:,2:end)));
 
+D1 = [D11 D12];
+D2 = [D21 D22];
 
-
-
-
-
-
-
-
-
-
+J = J + ( (lambda/(2*m))*( sum(sumsq(Theta1(:,2:end))) + sum(sumsq(Theta2(:,2:end))) ) );
 
 % -------------------------------------------------------------
 
 % =========================================================================
 
 % Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
+grad = [D1(:) ; D2(:)];
 
 end
