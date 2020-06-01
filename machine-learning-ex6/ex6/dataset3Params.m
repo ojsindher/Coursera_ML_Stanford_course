@@ -23,11 +23,20 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+for i=1:8,
+ for j=1:8,
+  C = C_(i);
+  sigma = sigma_(j);
+  model= svmTrain(X, y, C, @(x1, x2) gaussianKernel(x1, x2, sigma));
+  predictions = svmPredict(model, Xval);
+  mis_error(i,j) = mean(double(predictions ~= yval));
 
+end
+end
 
-
-
-
+[i,j] = find(mis_error==min(mis_error(:)));
+C = C_(i);
+sigma = sigma_(j);
 
 % =========================================================================
 
